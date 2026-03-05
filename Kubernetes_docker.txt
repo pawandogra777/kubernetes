@@ -1,0 +1,97 @@
+Kubernetes
+
+#######Install miniKube
+curl -LO https://storage.googleapis.com/minikube/releases/latest/minikube-linux-arm64
+sudo install minikube-linux-arm64 /usr/local/bin/minikube
+
+minikube start
+
+
+################install kubectl
+sudo snap install kubectl --classic
+kubectl version --client
+
+
+minikube kubectl -- get nodes
+
+kubectl get nodes
+
+
+#########Switch Docker to Minikube
+eval $(minikube docker-env)
+
+###check change hua ya nhi
+docker info | grep Name
+output: Name: minikube
+
+
+
+
+#############build agian pipeline############################
+docker build --no-cache -t eob_pipeline2:latest .
+
+##### check again image bni ya nhi##############################
+minikube ssh
+
+#####and then bash this
+docker images
+
+####after bash 
+exit
+
+
+
+
+##########create file
+nano deployment.yaml
+
+exmaple
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eob-pipeline
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eob
+  template:
+    metadata:
+      labels:
+        app: eob
+    spec:
+      containers:
+      - name: eob-container
+        image: eob-pipeline
+        imagePullPolicy: Never
+
+
+kubectl apply -f eobk-deployment.yaml  or   kubectl rollout restart deployment eob-deployment
+
+kubectl get pods
+
+
+
+##### after pods check (where is th error)
+kubectl describe pod eobk-deployment-5f9457f5d9-j5b76 
+
+kubectl logs eobk-deployment-56966cb786-bn2d8 
+
+
+
+####################if you wnat to check read write permission of folder bash 
+ls -ld /lambda/nfs/NDS1/EOB/EOB_1/OP
+
+#######################to make the folder readable, writeable,executable by everyone bash
+sudo chmod -R 777 /lambda/nfs/NDS1/EOB/EOB_1
+
+
+#################if only owner should write
+sudo chmod -R 755 /lambda/nfs/NDS1/EOB/EOB_1
+
+
+########better way chnage owner
+bash
+ls -ld /lambda/nfs/NDS1/EOB/EOB_1
+bash
+sudo chown -R ubuntu:ubuntu /lambda/nfs/NDS1/EOB/EOB_1

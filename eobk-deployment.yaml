@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eobk-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eob
+  template:
+    metadata:
+      labels:
+        app: eob
+    spec:
+      containers:
+      - name: eob-container
+        image: eob_pipeline3:latest
+        imagePullPolicy: Never
+        volumeMounts:
+        - name: eob-volume
+          mountPath: /lambda/nfs/NDS1/EOB/EOB_1
+      volumes:
+      - name: eob-volume
+        hostPath:
+          path: /lambda/nfs/NDS1/EOB/EOB_1
+          type: Directory

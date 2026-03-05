@@ -1,0 +1,6 @@
+mlflow
+pandas
+pillow
+requests
+pdf2image
+openpyxl
