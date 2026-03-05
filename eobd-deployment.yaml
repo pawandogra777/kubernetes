@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: eob-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: eob
+  template:
+    metadata:
+      labels:
+        app: eob
+    spec:
+      containers:
+      - name: eob-container
+        image: eob_pipeline:latest
+        imagePullPolicy: Never
+        ports:
+        - containerPort: 8000
+        volumeMounts:
+        - name: output-volume
+          mountPath: /app/OP
+      volumes:
+      - name: output-volume
+        hostPath:
+          path: /data/OP
+          type: DirectoryOrCreate
